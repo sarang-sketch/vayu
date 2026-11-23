@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Environment & secrets — never commit real keys
+.env
+.env.local
+.env.*.local
+# …except the web app's committed EMPTY defaults (no secrets inside)
+!apps/web/.env
+serviceAccount*.json
+.firebase/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# PWA dev artifacts
+dev-dist/

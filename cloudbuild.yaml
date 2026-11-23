@@ -1,0 +1,72 @@
+# Google Cloud Build → Cloud Run pipeline for the VayuSense API.
+# Usage: gcloud builds submit --config cloudbuild.yaml
+steps:
+  # 1 — Install workspace dependencies (clean, reproducible)
+  - id: install
+    name: node:20
+    entrypoint: npm
+    args: ['ci', '--no-audit', '--no-fund']
+
+  # 2 — Static analysis gate
+  - id: lint
+    name: node:20
+    entrypoint: npm
+    args: ['run', 'lint']
+    waitFor: ['install']
+
+  # 3 — Unit tests gate
+  - id: test
+    name: node:20
+    entrypoint: npm
+    args: ['run', 'test']
+    waitFor: ['install']
+
+  # 4 — Build container (multi-stage Dockerfile)
+  - id: build-image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/vayusense-api:$SHORT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/vayusense-api:latest'
+      - '.'
+    waitFor: ['lint', 'test']
+
+  # 5 — Push to Artifact Registry
+  - id: push-image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - '--all-tags'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/vayusense-api'
+    waitFor: ['build-image']
+
+  # 6 — Deploy to Cloud Run (asia-south1 for low latency in India)
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - vayusense-api
+      - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/vayusense-api:$SHORT_SHA'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--min-instances=0'
+      - '--max-instances=10'
+      - '--memory=512Mi'
+      - '--set-secrets=GEMINI_API_KEY=gemini-api-key:latest,GOOGLE_MAPS_API_KEY=maps-api-key:latest'
+    waitFor: ['push-image']
+
+substitutions:
+  _REGION: asia-south1
+  _REPO: vayusense
+
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/vayusense-api:$SHORT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/vayusense-api:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

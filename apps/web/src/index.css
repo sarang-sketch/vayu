@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ink-900 font-sans text-mist-100 antialiased;
+  }
+  ::selection {
+    @apply bg-teal-400/30 text-white;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-ink-600/60 bg-ink-800/80 shadow-card backdrop-blur;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-ink-500/70 bg-ink-700/60 px-3 py-1 text-xs font-medium text-mist-300;
+  }
+  .input {
+    @apply w-full rounded-xl border border-ink-500/70 bg-ink-900/80 px-3.5 py-2.5 text-sm text-mist-100 placeholder:text-mist-500 focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/30;
+  }
+  .skeleton {
+    @apply animate-shimmer rounded-xl bg-ink-700;
+    background-image: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+    background-size: 400px 100%;
+    background-repeat: no-repeat;
+  }
+}

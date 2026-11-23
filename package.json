@@ -1,0 +1,43 @@
+{
+  "name": "vayusense",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "VayuSense — GenAI-powered urban air quality assistant for families and communities. Personalized low-emission routines, indoor air hacks and sustainable swaps with measurable impact.",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "concurrently -n web,api -c cyan,magenta \"npm:dev:web\" \"npm:dev:api\"",
+    "dev:web": "npm run dev -w @vayusense/web",
+    "dev:api": "npm run dev -w @vayusense/functions",
+    "build": "npm run build -w @vayusense/shared && npm run build -w @vayusense/functions && npm run build -w @vayusense/web",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "smoke": "node scripts/smoke.mjs",
+    "typecheck": "npm run build -w @vayusense/shared && npm run typecheck --workspaces --if-present",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:hosting": "npm run build && firebase deploy --only hosting",
+    "deploy:cloudrun": "gcloud builds submit --config cloudbuild.yaml"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@vitest/coverage-v8": "^2.1.8",
+    "concurrently": "^9.1.0",
+    "eslint": "^9.15.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "globals": "^15.12.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.16.0",
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>VayuSense — Urban Air Quality Assistant</title>
+    <meta
+      name="description"
+      content="GenAI-powered smog companion for families and communities: personalized low-emission routines, indoor air quality hacks and sustainable swaps with measurable impact."
+    />
+    <meta name="theme-color" content="#0b1220" />
+    <meta property="og:title" content="VayuSense — Urban Air Quality Assistant" />
+    <meta
+      property="og:description"
+      content="Navigate winter smog with Gemini-powered routines, Google Air Quality data and quantified sustainable swaps."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
+    <link rel="apple-touch-icon" href="/icons/icon.svg" />
+
+    <!-- Google Fonts: Space Grotesk (display), Inter (UI), Noto Sans Devanagari (Hindi advisories) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Google Analytics 4 (gtag.js). Activates only when a real measurement id is configured. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      window.gtag = gtag;
+      var GA_ID = '%VITE_GA4_MEASUREMENT_ID%';
+      if (GA_ID && GA_ID.indexOf('%') !== 0) {
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+        document.head.appendChild(s);
+        gtag('js', new Date());
+        gtag('config', GA_ID, { send_page_view: true, anonymize_ip: true });
+      }
+    </script>
+  </head>
+  <body class="bg-ink-900">
+    <div id="root"></div>
+    <noscript>
+      VayuSense needs JavaScript to render live air-quality data and the Gemini assistant.
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
